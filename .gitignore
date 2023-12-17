@@ -1,0 +1,10 @@
+config/*
+!config/default.json
+node_modules
+.npmrc
+.DS_Store
+settings.json
+.vscode/*
+newrelic_agent.log
+
+config/

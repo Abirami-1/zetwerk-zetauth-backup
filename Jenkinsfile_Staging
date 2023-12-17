@@ -1,0 +1,70 @@
+#!/usr/bin/env groovy
+def environment = "staging"
+def hostList    = ["zet-auth-0.staging.intzetwerk.com","zet-auth-1.staging.intzetwerk.com","zet-user.staging.intzetwerk.com"]
+def gitUrl      = "git@github.com:zetwerk/zetauth.git"
+def modeList    = ["nomode","api","kafka","auth","task","user","aggregation","list-api","change-stream"]
+def deploy_path = "/home/ubuntu/zetauth"
+
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '20')),
+	parameters([
+        choice(choices: modeList, description: 'Mode List to be deployed', name: 'Mode'),
+        choice(choices: hostList, description: 'HostName to be deployed', name: 'Host'),
+        gitParameter(
+            branch: '',
+            branchFilter: ".*",
+            defaultValue: "origin/staging",
+            description: '',
+            listSize: '10',
+            name: 'branch',
+            quickFilterEnabled: true,
+            selectedValue: 'NONE',
+            sortMode: 'ASCENDING_SMART',
+            tagFilter: "*",
+            type: 'PT_BRANCH_TAG',
+            useRepository: "${gitUrl}")
+		])])
+def branch_name = "${params.branch}".replace("origin/","")
+node
+{
+    timestamps
+	    {
+        stage('Deploy Node app')
+            {
+                def workspace   = pwd()
+                def mode_value  = "${params.Mode}".toLowerCase()
+                def host_name   = "${params.Host}".toLowerCase()
+                if(mode_value.toLowerCase().trim() == "api" || mode_value.toLowerCase().trim() == "kafka" || mode_value.toLowerCase().trim() == "auth" || mode_value.toLowerCase().trim() == "task" ||mode_value.toLowerCase().trim() == "user" || mode_value.toLowerCase().trim() == "aggregation" || mode_value.toLowerCase().trim() == "list-api" || mode_value.toLowerCase().trim() == "change-stream")
+                {
+                    def deploy_mode = "-- -m "+ mode_value.toLowerCase()
+                    def errorCheck  =   sh(script: """cd /home/ubuntu/; sh /home/ubuntu/node-deploy.sh ${host_name} '${environment}' '${deploy_path}' ${branch_name} '${deploy_mode}' '${gitUrl}' > ${workspace}/result 2>&1 """, returnStdout: true)
+                    def output      =   readFile("${workspace}/result").trim()
+                    def error_list_stderr  =   output.contains("ERR")
+                    if (error_list_stderr == true)
+                    {
+                        println(output)
+                        error "Error found in deploy script"
+                    }
+                    else 
+                    {
+                        println(output)
+                    }
+                }
+                else
+                {
+                    def deploy_mode = ""
+                    def errorCheck  =   sh(script: """cd /home/ubuntu/; sh /home/ubuntu/node-deploy.sh ${host_name} '${environment}' '${deploy_path}' ${branch_name} '${deploy_mode}' '${gitUrl}' > ${workspace}/result 2>&1 """, returnStdout: true)
+                    def output      =   readFile("${workspace}/result").trim()
+                    def error_list_stderr  =   output.contains("ERR")
+                    if (error_list_stderr == true)
+                    {
+                        println(output)
+                        error "Error found in deploy script"
+                    }
+                    else 
+                    {
+                        println(output)
+                    }
+                }
+            }
+        }
+}

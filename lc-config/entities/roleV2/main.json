@@ -1,0 +1,106 @@
+{
+    "id": "roleV2",
+    "displayName": "name",
+    "fields": {
+        "name": {
+            "type": "string",
+            "unique": true,
+            "required": true
+        },
+        "permissions": "mixed",
+        "permissionsCount": {
+            "type": "object",
+            "fields": {
+                "totalCount": {
+                    "type": "number",
+                    "default": 0
+                },
+                "services": {
+                    "type": "[object]",
+                    "fields": {
+                        "name": "string",
+                        "count": "number"
+                    }
+                }
+            }
+        },
+        "permissionsTree": {
+            "type": "[object]",
+            "virtual": true
+        },
+        "selectedPermissionsTree": {
+            "type": "[object]",
+            "virtual": true
+        },
+        "updatedAt": {
+            "type": "date"
+        }
+    },
+    "list": {
+        "fields": ["name", "permissionsCount.totalCount",
+        {
+            "id": "permissionsCount.services.name",
+            "displayType": "tags"
+        },
+        "updatedAt"],
+        "searchbar": {
+            "placeholder": "Type role name"
+        },
+        "header": {
+            "title": "Roles"
+        }
+    },
+    "view": {
+        "sections": [
+            {
+                "id": "roleDetails",
+                "fields": [
+                    {
+                        "id": "name",
+                        "displayType": "text"
+                    }
+                ]
+            },
+            {
+                "id": "permissionsEnabled",
+                "fields": [
+                    {
+                        "id": "selectedPermissionsTree",
+                        "displayType": "checkboxTree",
+                        "labelKey": "label",
+                        "valueKey": "id"
+                    }
+                ]
+            }
+        ]
+    },
+    "edit": {
+        "header": {
+            "title": "Manage Roles"
+        },
+        "sections": [
+            {
+                "id": "roleDetails",
+                "fields": [
+                    {
+                        "id": "name",
+                        "inputType": "text"
+                    }
+                ]
+            },
+            {
+                "id": "permissionsEnabled",
+                "fields": [
+                    {
+                        "id": "permissionsTree",
+                        "ref": "serviceEntityAction",
+                        "inputType": "checkboxTree",
+                        "entireBody": true,
+                        "labelKey": "label",
+                        "valueKey": "id"
+                    }
+                ]
+            }
+        ]
+    }
+}

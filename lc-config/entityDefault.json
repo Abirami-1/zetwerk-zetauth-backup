@@ -1,0 +1,10 @@
+{
+    "list": {
+        "paginator": {
+            "perPage": 10,
+            "renderType": "server",
+            "type": "paged"
+        },
+        "displayType": "table"
+    }
+}

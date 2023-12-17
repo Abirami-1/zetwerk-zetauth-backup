@@ -1,0 +1,103 @@
+/**
+ * Model for factory
+ */
+
+const mongooseModel = require('../lib/utils/db').get();
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
+const uniqueValidator = require('mongoose-unique-validator');
+const { zetAuditPlugin } = require('@zetwerk/zet-audit');
+
+const schema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        shortName: {
+            type: String,
+            required: true
+        },
+        uniqueCode: {
+            type: String,
+            index: true,
+            unique: true,
+            sparse: true,
+            trim: true,
+            uniqueCaseInsensitive: true,
+            uppercase: true
+        },
+        emailId: {
+            type: String
+        },
+        address: {
+            type: String
+        },
+        state: {
+            type: String
+        },
+        city: {
+            type: String
+        },
+        gst: {
+            type: String
+        },
+        deleted: {
+            type: Boolean,
+            default: false
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user'
+        },
+        updatedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user'
+        },
+        businessUnits: [
+            {
+                _id: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true
+                },
+                name: {
+                    type: String,
+                    required: true
+                },
+                uniqueCode: {
+                    type: String,
+                    required: true
+                },
+                slug: {
+                    type: String
+                }
+            }
+        ]
+    },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true
+        }
+    }
+);
+
+schema.virtual('createdByDetails', {
+    ref: 'user',
+    localField: 'createdBy',
+    foreignField: '_id',
+    justOne: true
+});
+
+schema.virtual('updatedByDetails', {
+    ref: 'user',
+    localField: 'updatedBy',
+    foreignField: '_id',
+    justOne: true
+});
+
+schema.plugin(uniqueValidator);
+schema.set('collection', 'factories-erp');
+schema.plugin(mongoosePaginate);
+schema.plugin(zetAuditPlugin);
+module.exports = mongooseModel.model('factory-erp', schema);

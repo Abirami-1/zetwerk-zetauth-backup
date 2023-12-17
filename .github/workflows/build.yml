@@ -1,0 +1,100 @@
+name: Static Code Analysis
+on:
+  pull_request:
+    branches:
+      - staging
+      - production
+      - uat
+env:
+  PROJECT_KEY: 'zetauth'
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+jobs:
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+
+      - name: Get SonarQube Metrics
+        id: get-metrics
+        run: |
+          stats=$(curl -s -u $SONAR_TOKEN: "$SONAR_HOST_URL/api/measures/component?component=$PROJECT_KEY&metricKeys=bugs,vulnerabilities,code_smells,coverage")
+          echo "::set-output name=stats::$stats"
+
+      - name: Quality Gate Status
+        id: quality-gate-status
+        run: |
+          qualityGateStatus=$(curl -s -u $SONAR_TOKEN: "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY" | jq -r '.projectStatus.status')
+          echo "::set-output name=qualityGateStatus::$qualityGateStatus"
+
+      - name: Parse Metrics
+        id: parse-metrics
+        run: |
+          jq -r '.projectStatus.status'
+          stats='${{ steps.get-metrics.outputs.stats }}'
+          vulnerabilities=$(echo "$stats" | jq -r '.component.measures[] | select(.metric == "vulnerabilities").value')
+          coverage=$(echo "$stats" | jq -r '.component.measures[] | select(.metric == "coverage").value')
+          bugs=$(echo "$stats" | jq -r '.component.measures[] | select(.metric == "bugs").value')
+          code_smells=$(echo "$stats" | jq -r '.component.measures[] | select(.metric == "code_smells").value')
+          echo "::set-output name=vulnerabilities::$vulnerabilities"
+          echo "::set-output name=coverage::$coverage"
+          echo "::set-output name=bugs::$bugs"
+          echo "::set-output name=code_smells::$code_smells"
+      - name: Render template
+        id: template
+        uses: chuhlomin/render-template@v1.7
+        with:
+          template: .github/sonarqube.md
+          vars: |
+            bugs: ${{ steps.parse-metrics.outputs.bugs }}
+            code_smells: ${{ steps.parse-metrics.outputs.code_smells }}
+            vulnerabilities: ${{ steps.parse-metrics.outputs.vulnerabilities }}
+            coverage: ${{ steps.parse-metrics.outputs.coverage }}
+            link: ${{ env.SONAR_HOST_URL }}/dashboard?id=${{ env.PROJECT_KEY }}
+            quality_gate_status: ${{ steps.quality-gate-status.outputs.qualityGateStatus }}
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+
+      - name: Create comment
+        if: steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{steps.template.outputs.result}}
+          reactions: rocket
+
+      - name: Update comment
+        if: steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: ${{steps.template.outputs.result}}
+          reactions: hooray
+      # Check the Quality Gate status.
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        if: success() || failure()
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        # Force to fail step after specific time.
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }} #OPTIONAL
+
+      # Optionally you can use the output from the Quality Gate in another step.
+      # The possible outputs of the `quality-gate-status` variable are `PASSED`, `WARN` or `FAILED`.
+      - name: 'Example show SonarQube Quality Gate Status value'
+        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"

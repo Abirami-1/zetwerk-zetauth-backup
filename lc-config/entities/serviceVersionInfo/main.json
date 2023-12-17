@@ -1,0 +1,14 @@
+{
+    "id": "serviceVersionInfo",
+    "fields": {
+        "service": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "lastSyncedVersion": {
+            "type": "string",
+            "required": true
+        }
+    }
+}

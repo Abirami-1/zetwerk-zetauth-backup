@@ -1,0 +1,22 @@
+{
+  "name": "local-setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.sh",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/zetapps/common/zetauth.git"
+  },
+  "author": "zetwerk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/zetapps/common/zetauth/issues"
+  },
+  "homepage": "https://gitlab.com/zetapps/common/zetauth#readme",
+  "dependencies": {
+    "@zetwerk/zet-service-registry": "^1.0.0-beta.10"
+  }
+}

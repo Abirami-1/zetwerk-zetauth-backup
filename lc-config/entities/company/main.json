@@ -1,0 +1,100 @@
+{
+    "id": "company",
+    "fields": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "index": true
+        },
+        "slug": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "legalName": {
+            "type": "string",
+            "required": true
+        },
+        "cinNo": {
+            "type": "string",
+            "required": true
+        },
+        "website": "string",
+        "logoUrl": "string",
+        "address": {
+            "type": "object",
+            "fiields": {
+                "line1": {
+                    "type": "string",
+                    "required": true
+                },
+                "line2": "string",
+                "pin": {
+                    "type": "string",
+                    "required": true
+                },
+                "city": {
+                    "type": "string",
+                    "required": true
+                },
+                "state": {
+                    "type": "string",
+                    "required": true
+                },
+                "country": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "companyType": "string",
+        "localization": {
+            "type": "string",
+            "required": true,
+            "enum": ["DOMESTIC", "INTERNATIONAL"],
+            "default": "DOMESTIC"
+        },
+        "baseCurrencyId": "objectId",
+        "pointOfContact": {
+            "type": "object",
+            "fields": {
+                "name": "string",
+                "designation": "string",
+                "email": "string",
+                "phone": {
+                    "type": "object",
+                    "fields": {
+                        "number": "string",
+                        "countryCode": "string"
+                    }
+                }
+            }
+        },
+        "email": "string",
+        "phone": "string",
+        "uniqueCode": "string",
+        "segments": {
+            "type": "[object]",
+            "fields": {
+                "_id": {
+                    "type": "objectId",
+                    "required": true
+                },
+                "name": {
+                    "type": "string",
+                    "required": true
+                },
+                "uniqueCode": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        }
+    },
+    "actions": {
+        "create": false,
+        "edit": false,
+        "delete": false
+    }
+}

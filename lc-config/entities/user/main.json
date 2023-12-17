@@ -1,0 +1,206 @@
+{
+    "id": "user",
+    "displayName": "fullName",
+    "fields": {
+        "firstName": "string",
+        "lastName": "string",
+        "fullName": {
+            "virtual": true,
+            "type": "string"
+        },
+        "allowedIPs": "[string]",
+        "email": {
+            "type": "string",
+            "required": true,
+            "customValidator": "emailValidator"
+        },
+        "profilePicture": "string",
+        "phoneNumber": {
+            "type": "string"
+        },
+        "isActive": {
+            "type": "boolean",
+            "default": true
+        },
+        "password": "string",
+        "passPhrase": "string",
+        "status": {
+            "type": "string",
+            "enum": ["PENDING_ACK", "ACKNOWLEDGED"]
+        },
+        "appsEnabled": {
+            "type": "[objectId]",
+            "ref": "application"
+        },
+        "userType": {
+            "type": "string",
+            "enum": ["INTERNAL", "EXTERNAL", "SYSTEM", "GOOGLE"]
+        },
+        "userSubType": {
+            "type": "string",
+            "enum": ["CUSTOMER", "SUPPLIER", "ZETWERK", "FACTORY"]
+        },
+        "supplierId": "objectId",
+        "roleId": {
+            "type": "[objectId]"
+        },
+        "pomIds": {
+            "type": "[objectId]"
+        },
+        "expeditorIds": {
+            "type": "[objectId]"
+        },
+        "notificationTokens": "mixed",
+        "roleIdsV2": {
+            "type": "[objectId]",
+            "ref": "roleV2"
+        },
+        "rolesV2": {
+            "type": "[object]",
+            "refId": "roleIdsV2",
+            "ref": "roleV2",
+            "virtual": true
+        },
+        "applicationIds": {
+            "type": "[objectId]",
+            "ref": "application"
+        },
+        "applications": {
+            "type": "[object]",
+            "refId": "applicationIds",
+            "ref": "application",
+            "virtual": true
+        },
+        "companies": {
+            "type": "[company]",
+            "ref": "company"
+        },
+        "userGroupIds": {
+            "type": "[objectId]",
+            "ref": "user-group"
+        },
+        "ipRestrictionStatus": {
+            "type": "string",
+            "default": "DISABLED",
+            "enum": ["ENABLED", "DISABLED"]
+        },
+        "updatedById": "objectId"
+    },
+
+    "actions": {
+        "create": false,
+        "delete": false,
+        "edit": false,
+        "updateRole": {
+            "type": "actionView",
+            "displayType": "primary"
+        },
+        "updateApplication": {
+            "type": "actionView",
+            "displayType": "primary"
+        }
+    },
+
+    "userActors": [
+        {
+            "label": "Self",
+            "code": "self",
+            "type": "internal",
+            "path": "_id"
+        }
+    ],
+
+    "actionViews": {
+        "updateRole": {
+            "type": "dialog",
+            "displayType": "default",
+            "sections": [
+                {
+                    "id": "updateRole",
+                    "fields": [
+                        {
+                            "id": "rolesV2",
+                            "labelKey": "name",
+                            "valueKey": "_id",
+                            "inputType": "multiselect",
+                            "entireBody": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "updateApplication": {
+            "type": "dialog",
+            "displayType": "default",
+            "sections": [
+                {
+                    "id": "updateApplication",
+                    "fields": [
+                        {
+                            "id": "applications",
+                            "labelKey": "name",
+                            "valueKey": "_id",
+                            "inputType": "multiselect",
+                            "entireBody": true
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    "list": {
+        "fields": ["fullName", "email", "phoneNumber", "isActive"],
+        "searchbar": true,
+        "header": {
+            "title": "Users"
+        },
+        "filters": [
+            {
+                "isQuickFilter": true,
+                "id": "roleIdsV2",
+                "type": "dropdown"
+            },
+            {
+                "isQuickFilter": true,
+                "id": "companies.companyId",
+                "type": "dropdown",
+                "labelKey": "name"
+            }
+        ]
+    },
+
+    "view": {
+        "sections": [
+            {
+                "id": "primaryDetails",
+                "fields": ["firstName", "lastName"]
+            },
+            {
+                "id": "contactDetails",
+                "fields": ["email", "phoneNumber"]
+            },
+            {
+                "id": "roleDetails",
+                "actions": ["updateRole"],
+                "fields": [
+                    {
+                        "id": "rolesV2.name",
+                        "displayType": "tags",
+                        "infoText": "These roles are new roles and are not applicable for Non-LCP systems."
+                    }
+                ]
+            },
+            {
+                "id": "applicationDetails",
+                "actions": ["updateApplication"],
+                "fields": [
+                    {
+                        "id": "applications.name",
+                        "displayType": "tags"
+                    }
+                ]
+            }
+        ]
+    }
+}

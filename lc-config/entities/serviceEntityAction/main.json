@@ -1,0 +1,20 @@
+{
+    "id": "serviceEntityAction",
+    "fields": {
+        "service": {
+            "type": "string",
+            "required": true
+        },
+        "entity": {
+            "type": "string",
+            "required": true
+        },
+        "actions": {
+            "type": "[object]",
+            "fields": {
+                "label": "string",
+                "id": "string"
+            }
+        }
+    }
+}

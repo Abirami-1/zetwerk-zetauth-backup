@@ -1,0 +1,17 @@
+{
+    "id": "company",
+    "fields": {
+        "companyId": {
+            "type": "objectId",
+            "index": true,
+            "ref": "company",
+            "required": true
+        },
+        "slug": {
+            "type": "string",
+            "index": true,
+            "required": true
+        },
+        "uniqueCode": "string"
+    }
+}

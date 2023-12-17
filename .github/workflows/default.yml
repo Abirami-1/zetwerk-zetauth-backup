@@ -1,0 +1,28 @@
+name: Run tests
+
+on: [push]
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Create .npmrc
+        run: echo -e "@zetwerk:registry=https://npm.pkg.github.com \n //npm.pkg.github.com/:_authToken=${{secrets.NPM_AUTH_TOKEN}}" > .npmrc
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start linting
+        run: npm run lint
+        env:
+          CI: true

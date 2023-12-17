@@ -1,0 +1,23 @@
+{
+    "id": "user-group",
+    "fields": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "slug": {
+            "type": "string",
+            "unique": true,
+            "required": true
+        },
+        "userIds": {
+            "type": "objectId",
+            "required": true
+        }
+    },
+    "actions": {
+        "create": false,
+        "edit": false,
+        "delete": false
+    }
+}

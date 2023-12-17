@@ -1,0 +1,36 @@
+{
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "extends": "eslint:recommended",
+    "plugins": ["@zetwerk/custom-rules"],
+    "rules": {
+      "indent": ["error", 4, {"SwitchCase": 1}],
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "no-console": [
+        "error",
+        {
+          "allow": ["log"]
+        }
+      ],
+      "quote-props": ["error", "as-needed"]
+    },
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+    },
+    "globals": {
+      "describe": true,
+      "before": true,
+      "beforeEach": true,
+      "afterEach": true,
+      "it": true,
+      "after": true
+    }
+  }  

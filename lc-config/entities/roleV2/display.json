@@ -1,0 +1,55 @@
+{
+    "entityName": "Role",
+    "fields": {
+        "name": {
+            "label": "Role Name"
+        }
+    },
+    "actions": {
+        "create": {
+            "title": "Create"
+        },
+        "delete": {
+            "title": "Delete"
+        },
+        "update": {
+            "title": "Edit"
+        }
+    },
+    "list": {
+        "fields": {
+            "updatedByDetails.fullName": {
+                "label": "Last Updated By"
+            },
+            "updatedAt": {
+                "label": "Last Updated At"
+            },
+            "permissionsCount.totalCount": {
+                "label": "Total Permissions"
+            },
+            "permissionsCount.services.name": {
+                "label": "Accessible Services"
+            }
+        }
+    },
+    "edit": {
+        "sections": {
+            "roleDetails": {
+                "title": "Role Details"
+            },
+            "permissionsEnabled": {
+                "title": "Select Permissions"
+            }
+        }
+    },
+    "view": {
+        "sections": {
+            "roleDetails": {
+                "title": "Role Details"
+            },
+            "permissionsEnabled": {
+                "title": "Permissions Enabled"
+            }
+        }
+    }
+}

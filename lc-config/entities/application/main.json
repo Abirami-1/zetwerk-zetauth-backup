@@ -1,0 +1,10 @@
+{
+    "id": "application",
+    "fields": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        }
+    }
+}

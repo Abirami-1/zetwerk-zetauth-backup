@@ -1,0 +1,152 @@
+{
+    "entityName": "User",
+    "fields": {
+        "firstName": {
+            "label": "First Name"
+        },
+        "lastName": {
+            "label": "Last Name"
+        },
+        "email": {
+            "label": "Email"
+        },
+        "phoneNumber": {
+            "label": "Phone Number"
+        },
+        "isActive": {
+            "label": "Is Active"
+        },
+        "fullName": {
+            "label": "Name"
+        }
+    },
+
+    "list": {
+        "filters": {
+            "companies": {
+                "title": "Company"
+            }
+        }
+    },
+
+    "actions": {
+        "updateApplication": {
+            "title": "Edit"
+        },
+        "updateRole": {
+            "title": "Edit"
+        }
+    },
+
+    "actionViews": {
+        "updateRole": {
+            "title": "Edit Role",
+            "sections": {
+                "updateRole": {
+                    "fields": {
+                        "rolesV2": {
+                            "label": "User Roles"
+                        }
+                    }
+                }
+            }
+        },
+        "updateApplication": {
+            "title": "Edit Application",
+            "sections": {
+               "updateApplication": {
+                "fields": {
+                    "applications": {
+                        "label": "User Applications"
+                    }
+                }
+               }
+            }
+        }
+    },
+    
+    "view": {
+        "sections": {
+            "primaryDetails": {
+                "title": "Primary Details",
+                "fields": {
+                    "firstName": {
+                        "label": "First Name"
+                    },
+                    "lastName": {
+                        "label": "Last Name"
+                    }
+                }
+            },
+            "contactDetails": {
+                "title": "Contact Details",
+                "fields": {
+                    "email": {
+                        "label": "Email"
+                    },
+                    "phoneNumber": {
+                        "label": "Phone Number"
+                    }
+                }
+            },
+            "roleDetails": {
+                "title": "Role Details",
+                "fields": {
+                    "rolesV2.name": {
+                        "label": "User Roles"
+                    }
+                }
+            },
+            "applicationDetails": {
+                "title": "Application Details",
+                "fields": {
+                    "applications.name": {
+                        "label": "Application"
+                    }
+                }
+            }
+        }
+    },
+    "edit": {
+        "sections": {
+            "primaryDetails": {
+                "title": "Primary Details",
+                "fields": {
+                    "firstName": {
+                        "label": "First Name"
+                    },
+                    "lastName": {
+                        "label": "Last Name"
+                    }
+                }
+            },
+            "contactDetails": {
+                "title": "Contact Details",
+                "fields": {
+                    "email": {
+                        "label": "Email"
+                    },
+                    "phoneNumber": {
+                        "label": "Phone Number"
+                    }
+                }
+            },
+            "roleDetails": {
+                "title": "Role Details",
+                "fields": {
+                    "rolesV2": {
+                        "label": "User Roles"
+                    }
+                }
+            },
+            "applicationDetails": {
+                "title": "Application Details",
+                "fields": {
+                    "applications": {
+                        "label": "Application"
+                    }
+                }
+            }
+        }
+    }
+}
